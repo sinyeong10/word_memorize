@@ -2,6 +2,7 @@
 import pandas as pd
 from datetime import datetime
 from sys import stdin
+import random
 
 # n, k = 30, 1
 def word_test(n, k):
@@ -21,33 +22,34 @@ def word_test(n, k):
         for i in range(count*n,(count+1)*n):
             row = calculate_data.iloc[i]
             print(f"{row['단어']}의 뜻은?")
-            tmp = stdin.readline().strip()
             print("\n\n\n")
+            tmp = stdin.readline().strip()
             print(row['뜻'])
 
             print("T,N,F로 맞춘 정도를 표시하시오 : ")
             tmp = stdin.readline().strip()
+            print("\n\n\n")
             index = row['인덱스']
             # print(index)
             if row['단어'] != existing_data.loc[index-1, '단어']:
                 print("error 발생!")
                 print(f"{row['단어']}인데 {index}에서 {existing_data.loc[index-1, '단어']}가 적용됨!!")
-            if tmp == "T":
+            if tmp == "T" or tmp == "q":
                 # print(existing_data.loc[index-1, '단어'], existing_data.iloc[index-1]['단어'])
                 existing_data.loc[index-1, '날짜'] = datetime.now().strftime("%Y-%m-%d") #맞춘 날짜 갱신
                 #후자는 안됨
                 # existing_data.iloc[index-1]['날짜'] = datetime.now().strftime("%Y-%m-%d") #맞춘 날짜 갱신
                 
                 existing_data.loc[index-1, 'value'] += 30
-            elif tmp == "N":
-                existing_data.loc[index-1, 'value'] += 15
-            elif tmp == "F":
-                existing_data.loc[index-1, 'value'] += 5
+            elif tmp == "N" or tmp == "w":
+                existing_data.loc[index-1, 'value'] += 6
+            elif tmp == "F" or tmp == "e":
+                existing_data.loc[index-1, 'value'] += 3
                 # tmp = stdin.readline().strip() #한번 쳐보면서 암기하기!
             else:
                 print("일시 중지됨")
                 existing_data.to_csv(data_path, index=False)
-                print(f"{count*n+1}부터 {i+1}번까지 학습 끝")
+                print(f"{i+1}번까지 학습 끝")
                 return
             # print(calculate_data.at[i, '단어']) #.at은 인덱스 기반으로 찾음! #여긴 없어서 에러!
 
@@ -63,6 +65,6 @@ def word_test(n, k):
         # print(existing_data.head())
 
         existing_data.to_csv(data_path, index=False)
-        print(f"{count*n+1}부터 {i+1}번까지 학습 끝")
+        print(f"{i+1}번까지 학습 끝")
     print("test end")
     # print(calculate_data.head())

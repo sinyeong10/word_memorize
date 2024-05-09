@@ -24,7 +24,7 @@ elif order == "":
     print("몇개를 몇 번 학습할지 입력하시오")
     count = stdin.readline().strip()
     if count == "":
-        n, k = 10, 5
+        n, k = 20, 3
     else:
         n, k = list(map(int, count.split()))
     word_test(n, k)
