@@ -18,7 +18,8 @@ def word_test(n, k):
     # print(calculate_data.shape)
     # print(calculate_data.head())
     # print(calculate_data.flags)
-    for count in range(k):
+    count = 0
+    for _ in range(k-1):
         for i in range(count*n,(count+1)*n):
             row = calculate_data.iloc[i]
             print(f"{row['단어']}의 뜻은?")
@@ -26,7 +27,7 @@ def word_test(n, k):
             tmp = stdin.readline().strip()
             print(row['뜻'])
 
-            print("T,N,F로 맞춘 정도를 표시하시오 : ")
+            print("T,N,F로 맞춘 정도를 표시하시오(멈추는 건 S) : ")
             tmp = stdin.readline().strip()
             print("\n\n\n")
             index = row['인덱스']
@@ -41,16 +42,14 @@ def word_test(n, k):
                 # existing_data.iloc[index-1]['날짜'] = datetime.now().strftime("%Y-%m-%d") #맞춘 날짜 갱신
                 
                 existing_data.loc[index-1, 'value'] += 30
-            elif tmp == "N" or tmp == "w":
-                existing_data.loc[index-1, 'value'] += 6
-            elif tmp == "F" or tmp == "e":
-                existing_data.loc[index-1, 'value'] += 3
-                # tmp = stdin.readline().strip() #한번 쳐보면서 암기하기!
-            else:
+            elif tmp == "S" or tmp == "s":
                 print("일시 중지됨")
                 existing_data.to_csv(data_path, index=False)
                 print(f"{i+1}번까지 학습 끝")
                 return
+                # tmp = stdin.readline().strip() #한번 쳐보면서 암기하기!
+            else:
+                pass
             # print(calculate_data.at[i, '단어']) #.at은 인덱스 기반으로 찾음! #여긴 없어서 에러!
 
             #A value is trying to be set on a copy of a slice from a DataFrame는 참조로 전체 중 일부를 가져왔기 때문에
@@ -66,5 +65,40 @@ def word_test(n, k):
 
         existing_data.to_csv(data_path, index=False)
         print(f"{i+1}번까지 학습 끝")
+    
+    print("마지막 테스트")
+    for i in range(count*n,(count+1)*n):
+        row = calculate_data.iloc[i]
+        print(f"{row['단어']}의 뜻은?")
+        print("\n\n\n")
+        tmp = stdin.readline().strip()
+        print(row['뜻'])
+
+        print("T,N,F로 맞춘 정도를 표시하시오 : ")
+        tmp = stdin.readline().strip()
+        print("\n\n\n")
+        index = row['인덱스']
+        # print(index)
+        if row['단어'] != existing_data.loc[index-1, '단어']:
+            print("error 발생!")
+            print(f"{row['단어']}인데 {index}에서 {existing_data.loc[index-1, '단어']}가 적용됨!!")
+        if tmp == "T" or tmp == "q":
+            # print(existing_data.loc[index-1, '단어'], existing_data.iloc[index-1]['단어'])
+            existing_data.loc[index-1, '날짜'] = datetime.now().strftime("%Y-%m-%d") #맞춘 날짜 갱신
+            #후자는 안됨
+            # existing_data.iloc[index-1]['날짜'] = datetime.now().strftime("%Y-%m-%d") #맞춘 날짜 갱신
+            
+            existing_data.loc[index-1, 'value'] += 30
+        elif tmp == "N" or tmp == "w":
+            existing_data.loc[index-1, 'value'] += 6
+        elif tmp == "F" or tmp == "e":
+            existing_data.loc[index-1, 'value'] += 3
+            # tmp = stdin.readline().strip() #한번 쳐보면서 암기하기!
+        else:
+            print("일시 중지됨")
+            existing_data.to_csv(data_path, index=False)
+            print(f"{i+1}번까지 학습 끝")
+            return
+
     print("test end")
     # print(calculate_data.head())
